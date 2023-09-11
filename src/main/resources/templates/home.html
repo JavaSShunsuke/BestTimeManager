@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>ベストタイム管理アプリケーション</title>
+    <!--    <link th:href="@{/home.css}" rel="stylesheet">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!--    Jquery-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<!--    Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <!--    home.js読み込み-->
+    <script th:src="@{/home.js}"></script>
+</head>
+
+<body>
+<h1>ベストタイム管理アプリケーション</h1>
+
+<form action="/swimmeradd">
+<div class="swimmer_form">
+    <h2>選手の登録</h2>
+    <label class="form-label">選手名</label>
+    <input name="swimmerName" class="form-control" type="text" id="new_swimmerName" />
+    <input type="submit" value="登録"/>
+</div>
+</form>
+
+<div>
+    <h2>選手一覧</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th width="150">ID</th>
+            <th>選手名</th>
+            <th width="80">更新</th>
+            <th width="80">削除</th>
+        </tr>
+        </thead>
+        <tbody id="swimmer_name_body">
+        <tr th:each="swimmer : ${swimmer}">
+            <td th:text="${swimmer.swimmerId}"></td>
+            <td th:text="${swimmer.swimmerName}"></td>
+            <td>
+                <button type="submit" name="update_button" onclick="swimmerCopyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#swimmerUpdateDialog" class="btn btn-primary">更新</button>
+            </td>
+            <td>
+                <form action="/swimmerdelete">
+                    <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
+                    <input type="hidden" name="swimmerId" th:value="${swimmer.swimmerId}" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="swimmerUpdateDialog" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/swimmerupdate">
+                <div class="modal-header">
+                    <h2>選手の更新</h2>
+                </div>
+                <div class="modal-body">
+                    <input id="update_id" name="swimmerId" type="hidden"/>
+                    <label for="update_name">選手名</label>
+                    <input id="update_name" class="form-control" name="swimmerName" type="text"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">更新</button>
+                    <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
