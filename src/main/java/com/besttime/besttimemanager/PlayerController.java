@@ -39,14 +39,14 @@ public class PlayerController {
     String addPlayer(@RequestParam("playerName") String Name){
         String id = UUID.randomUUID().toString().substring(0, 8);
         playerItem item = new playerItem(id,Name,true);
-        this.dao.playerAdd(item);
+        this.dao.addplayer(item);
 
         return "redirect:/playerlist";
     }
 
     @GetMapping("/deleteplayer")
     String deleteItem(@RequestParam("playerId") String id) {
-        this.dao.delete(id);
+        this.dao.deletePlayer(id);
         return "redirect:/playerlist";
     }
 
@@ -54,7 +54,7 @@ public class PlayerController {
     String updateItem(@RequestParam("playerId") String id,
                       @RequestParam("playerName") String name) {
         playerItem item = new playerItem(id,name,true);
-        this.dao.update(item);
+        this.dao.updatePlayer(item);
         return "redirect:/playerlist";
     }
 }

@@ -21,7 +21,8 @@ public class BesttimeDao {
             this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int playerAdd(PlayerController.playerItem item){
+//    選手機能
+    public int addplayer(PlayerController.playerItem item){
         SqlParameterSource param = new BeanPropertySqlParameterSource(item);
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("player");
@@ -41,16 +42,48 @@ public class BesttimeDao {
         return list;
     }
 
-    public int delete(String id) {
+    public int deletePlayer(String id) {
         int number = jdbcTemplate.update("UPDATE player SET playerFlag=? WHERE playerId = ?",false,id);
         return number;
     }
 
-    public int update(PlayerController.playerItem playerItem){
-        int number2 = jdbcTemplate.update("update player set playerName=? where playerId = ?",
+    public int updatePlayer(PlayerController.playerItem playerItem){
+        int number2 = jdbcTemplate.update("UPDATE player set playerName=? where playerId = ?",
                 playerItem.playerName(),
                 playerItem.playerId());
         return number2;
+    }
+//競技種目機能
+    public int addEvent(EventController.eventItem item){
+        SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("event");
+        return insert.execute(param);
+    }
+
+    public <LIst> List<EventController.eventItem> findEvents(){
+        String query = "SELECT * FROM " + "event WHERE eventFlag=true";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<EventController.eventItem> list = result.stream().map(
+                (Map<String, Object> row) -> new EventController.eventItem(
+                        row.get("eventId").toString(),
+                        row.get("eventName").toString(),
+                        (Boolean)row.get("eventFlag")
+
+                )).toList();
+        return list;
+    }
+
+    public int deleteEvent(String id) {
+        int number = jdbcTemplate.update("UPDATE event SET eventFlag=? WHERE eventId = ?",false,id);
+        return number;
+    }
+
+    public int updateEvent(EventController.eventItem eventItem){
+        int number = jdbcTemplate.update("UPDATE event set eventName=? where eventId = ?",
+                eventItem.eventName(),
+                eventItem.eventId());
+        return number;
     }
 
 }
