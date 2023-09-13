@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS swimmer(
-    swimmerId VARCHAR(8)   PRIMARY KEY,
-    swimmerName VARCHAR(256),
-    swimmerFlag BOOLEAN
+CREATE TABLE IF NOT EXISTS player(
+    playerId VARCHAR(8)   PRIMARY KEY,
+    playerName VARCHAR(256),
+    playerFlag BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS event(
@@ -12,12 +12,12 @@ CREATE TABLE IF NOT EXISTS event(
 
 CREATE TABLE IF NOT EXISTS record(
     recordId VARCHAR(8)   PRIMARY KEY,
-    swimmerId VARCHAR(8),
+    playerId VARCHAR(8),
     eventId VARCHAR(8),
     recordTime TIME,
     recordFlag BOOLEAN,
-    FOREIGN KEY(swimmerId)
-    REFERENCES swimmer(swimmerId),
+    FOREIGN KEY(playerId)
+    REFERENCES player(playerId),
     FOREIGN KEY(eventId)
     REFERENCES event(eventId)
 );

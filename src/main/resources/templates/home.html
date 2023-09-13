@@ -16,11 +16,11 @@
 <body>
 <h1>ベストタイム管理アプリケーション</h1>
 
-<form action="/swimmeradd">
-<div class="swimmer_form">
+<form action="/addplayer">
+<div class="player_form">
     <h2>選手の登録</h2>
     <label class="form-label">選手名</label>
-    <input name="swimmerName" class="form-control" type="text" id="new_swimmerName" />
+    <input name="playerName" class="form-control" type="text" id="new_playerName" />
     <input type="submit" value="登録"/>
 </div>
 </form>
@@ -36,17 +36,17 @@
             <th width="80">削除</th>
         </tr>
         </thead>
-        <tbody id="swimmer_name_body">
-        <tr th:each="swimmer : ${swimmer}">
-            <td th:text="${swimmer.swimmerId}"></td>
-            <td th:text="${swimmer.swimmerName}"></td>
+        <tbody id="player_name_body">
+        <tr th:each="player : ${player}">
+            <td th:text="${player.playerId}"></td>
+            <td th:text="${player.playerName}"></td>
             <td>
-                <button type="submit" name="update_button" onclick="swimmerCopyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#swimmerUpdateDialog" class="btn btn-primary">更新</button>
+                <button type="submit" name="update_button" onclick="playerCopyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary">更新</button>
             </td>
             <td>
-                <form action="/swimmerdelete">
+                <form action="/deleteplayer">
                     <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
-                    <input type="hidden" name="swimmerId" th:value="${swimmer.swimmerId}" />
+                    <input type="hidden" name="playerId" th:value="${player.playerId}" />
                 </form>
             </td>
         </tr>
@@ -54,17 +54,17 @@
     </table>
 </div>
 
-<div id="swimmerUpdateDialog" class="modal fade" tabindex="-1">
+<div id="playerUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/swimmerupdate">
+            <form action="/updateplayer">
                 <div class="modal-header">
                     <h2>選手の更新</h2>
                 </div>
                 <div class="modal-body">
-                    <input id="update_id" name="swimmerId" type="hidden"/>
+                    <input id="update_id" name="playerId" type="hidden"/>
                     <label for="update_name">選手名</label>
-                    <input id="update_name" class="form-control" name="swimmerName" type="text"/>
+                    <input id="update_name" class="form-control" name="playerName" type="text"/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">更新</button>

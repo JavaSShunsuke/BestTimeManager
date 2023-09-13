@@ -21,35 +21,35 @@ public class BesttimeDao {
             this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int swimmerAdd(SwimmerController.swimmerItem item){
+    public int playerAdd(PlayerController.playerItem item){
         SqlParameterSource param = new BeanPropertySqlParameterSource(item);
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
-                .withTableName("swimmer");
+                .withTableName("player");
         return insert.execute(param);
     }
 
-    public <LIst> List<SwimmerController.swimmerItem> findSwimmers(){
-        String query = "SELECT * FROM " + "swimmer WHERE swimmerFlag=true";
+    public <LIst> List<PlayerController.playerItem> findPlayers(){
+        String query = "SELECT * FROM " + "player WHERE playerFlag=true";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
-        List<SwimmerController.swimmerItem> list = result.stream().map(
-                (Map<String, Object> row) -> new SwimmerController.swimmerItem(
-                        row.get("swimmerId").toString(),
-                        row.get("swimmerName").toString(),
-                        (Boolean)row.get("swimmerFlag")
+        List<PlayerController.playerItem> list = result.stream().map(
+                (Map<String, Object> row) -> new PlayerController.playerItem(
+                        row.get("playerId").toString(),
+                        row.get("playerName").toString(),
+                        (Boolean)row.get("playerFlag")
 
                 )).toList();
         return list;
     }
 
     public int delete(String id) {
-        int number = jdbcTemplate.update("UPDATE swimmer SET swimmerFlag=? WHERE swimmerId = ?",false,id);
+        int number = jdbcTemplate.update("UPDATE player SET playerFlag=? WHERE playerId = ?",false,id);
         return number;
     }
 
-    public int update(SwimmerController.swimmerItem swimmerItem){
-        int number2 = jdbcTemplate.update("update swimmer set swimmerName=? where swimmerId = ?",
-                swimmerItem.swimmerName(),
-                swimmerItem.swimmerId());
+    public int update(PlayerController.playerItem playerItem){
+        int number2 = jdbcTemplate.update("update player set playerName=? where playerId = ?",
+                playerItem.playerName(),
+                playerItem.playerId());
         return number2;
     }
 
