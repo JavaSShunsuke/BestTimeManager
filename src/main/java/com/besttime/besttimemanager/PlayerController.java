@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class PlayerController {
     record eventItem(String eventId, String eventName, boolean eventFlag) {
 
     }
-    record recordItem(String recordId, String swimmerId, String eventId, String bestTime, boolean recordFlag) {
+    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag, boolean bestFlag) {
 
     }
 
@@ -36,7 +37,7 @@ public class PlayerController {
     }
 
     @GetMapping("/addplayer")
-    String addPlayer(@RequestParam("playerName") String Name){
+    String addPlayer(@RequestParam(name = "playerName", required = false, defaultValue ="default") String Name){
         String id = UUID.randomUUID().toString().substring(0, 8);
         playerItem item = new playerItem(id,Name,true);
         this.dao.addplayer(item);
@@ -51,7 +52,7 @@ public class PlayerController {
     }
 
     @GetMapping("/updateplayer")
-    String updateItem(@RequestParam("playerId") String id,
+    String updateItem(@RequestParam(name = "playerName", required = false, defaultValue ="default") String id,
                       @RequestParam("playerName") String name) {
         playerItem item = new playerItem(id,name,true);
         this.dao.updatePlayer(item);

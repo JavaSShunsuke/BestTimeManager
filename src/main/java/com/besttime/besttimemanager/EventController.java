@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class EventController {
     record eventItem(String eventId, String eventName, boolean eventFlag) {
 
     }
-    record recordItem(String recordId, String swimmerId, String eventId, String bestTime, boolean recordFlag) {
+    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag, boolean bestFlag) {
 
     }
 
@@ -36,7 +37,7 @@ public class EventController {
     }
 
     @GetMapping("/addevent")
-    String addEvent(@RequestParam("eventName") String Name){
+    String addEvent(@RequestParam(name="eventName", defaultValue = "default") String Name){
         String id = UUID.randomUUID().toString().substring(0, 8);
         eventItem item = new eventItem(id,Name,true);
         this.dao.addEvent(item);
@@ -52,7 +53,7 @@ public class EventController {
 
     @GetMapping("/updateevent")
     String updateItem(@RequestParam("eventId") String id,
-                      @RequestParam("eventName") String name) {
+                      @RequestParam(name="eventName", defaultValue = "default") String name) {
         eventItem item = new eventItem(id,name,true);
         this.dao.updateEvent(item);
         return "redirect:/eventlist";

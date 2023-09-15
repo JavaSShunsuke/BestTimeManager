@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -85,5 +87,51 @@ public class BesttimeDao {
                 eventItem.eventId());
         return number;
     }
+//競技記録機能
+public int addRecord(RecordController.recordItem item){
+    SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+    SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
+            .withTableName("record");
+    return insert.execute(param);
+}
+    public int updateBestFlag(RecordController.recordItem recordItem){
+        int number = jdbcTemplate.update("UPDATE record SET BestFlag=false WHERE playerId = ? AND eventId = ?",
+                recordItem.playerId(),
+                recordItem.eventId());
+        return number;
+    }
 
+    public <LIst> List<RecordController.recordItem> findBestRecords(String playerId){
+        String query = "SELECT * FROM " + "record WHERE recordFlag=true AND bestFlag=true AND playerId='"+ playerId+"'";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<RecordController.recordItem> list = result.stream().map(
+                (Map<String, Object> row) -> new RecordController.recordItem(
+                        row.get("recordId").toString(),
+                        row.get("playerId").toString(),
+                        row.get("eventId").toString(),
+                        row.get("recordTime").toString(),
+                        (Boolean)row.get("recordFlag"),
+                        (Boolean)row.get("bestFlag")
+
+                )).toList();
+        return list;
+    }
+
+    public int deleteRecord(String id) {
+        int number = jdbcTemplate.update("UPDATE record SET recordFlag=? WHERE recordId = ?",false,id);
+        return number;
+    }
+
+    public int updateRecord(RecordController.recordItem recordItem) {
+        int number = jdbcTemplate.update("UPDATE record set recordTime=? where recordId = ?",
+                recordItem.recordTime(),
+                recordItem.recordId());
+        return number;
+    }
+
+    public String findPlayerName(String playerId) {
+        String query = "SELECT playerName FROM " + "player WHERE playerId='"+playerId+"'";
+        String name =this.jdbcTemplate.queryForObject(query,String.class);
+        return name;
+    }
 }

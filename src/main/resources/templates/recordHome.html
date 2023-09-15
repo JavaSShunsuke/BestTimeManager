@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>ベストタイム管理アプリケーション</title>
+    <!--    <link th:href="@{/home.css}" rel="stylesheet">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!--    Jquery-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <!--    Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+            integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+            crossorigin="anonymous"></script>
+    <!--    home.js読み込み-->
+    <script th:src="@{/home.js}"></script>
+    <!--home.css読み込み -->
+    <link th:href="@{/home.css}" rel="stylesheet">
+</head>
+
+<body>
+<h1 th:text="${playerHistory}"></h1>
+
+<nav>
+    <ul>
+        <li><a href="/playerlist">選手一覧</a></li>
+        <li><a href="/eventlist">競技種目一覧</a></li>
+        <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
+        <li><a href="#">BBBB</a></li>
+        <li><a href="#">CCCC</a></li>
+    </ul>
+</nav>
+
+<form action="/addrecord" name="record_form">
+    <div class="record_form">
+        <h2>記録の登録</h2>
+        <input type="hidden" name="playerId" th:value="${playerId}">
+        <label class="form-label">競技</label>
+        <select name="eventId">
+                <option th:each="event : ${event}" th:value="${event.eventId}" th:inline="text">[[${event.eventName}]]</option>
+        </select>
+        <label class="form-label">記録</label>
+        <textarea name="minute" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+        <label class="minute_label">分</label>
+        <textarea name="second" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+        <label class="minute_label">秒</label>
+        <textarea name="millisecond" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+        <input type="submit" value="登録" onclick="outputRecordTime();"/>
+        <textarea class="hidden" name="recordTime" cols="10" rows="1" readonly></textarea>
+    </div>
+</form>
+
+<div>
+    <h2>記録一覧</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th width="150">ID</th>
+            <th class="hidden">playerId</th>
+            <th class="hidden">eventId</th>
+            <th>競技名</th>
+            <th>記録</th>
+            <th width="80">更新</th>
+            <th width="80">削除</th>
+        </tr>
+        </thead>
+        <tbody id="record_time_body">
+        <tr th:each="record : ${record}">
+            <td th:text="${record.recordId}"></td>
+            <td class="hidden" th:text="${record.playerId}"></td>
+            <td class="hidden" th:text="${record.eventId}"></td>
+            <th:block th:each="event : ${event}" th:if="${record.eventId==event.eventId}">
+                <td th:text="${event.eventName}"></td>
+            </th:block>
+            <td th:text="${record.recordTime}"></td>
+            <td>
+                <button type="submit" name="update_button" onclick="copyToUpdateRecordDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary">更新
+                </button>
+            </td>
+            <td>
+                <form action="/deleterecord">
+                    <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
+                    <input type="hidden" name="recordId" th:value="${record.recordId}" />
+                    <input type="hidden" name="playerId" th:value="${record.playerId}" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="recordUpdateDialog" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/updaterecord" name="updateRecord_form">
+                <div class="modal-header">
+                    <h2>記録の更新</h2>
+                </div>
+                <div class="modal-body">
+                    <input id="update_recordId" name="recordId" type="hidden"/>
+                    <input id="update_playerId" name="playerId" type="hidden"/>
+                    <input id="update_eventId" name="eventId" type="hidden"/>
+                    <label>記録</label>
+                    <br>
+                    <textarea id="update_minute" name="minute" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <label class="minute_label">分</label>
+                    <textarea id="update_second" name="second" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <label class="minute_label">秒</label>
+                    <textarea id="update_millisecond" name="millisecond" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <input type="submit" value="登録" onclick="updateRecordTime();"/>
+                    <textarea class="hidden" name="recordTime" cols="10" rows="1" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">更新</button>
+                    <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

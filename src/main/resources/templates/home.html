@@ -20,8 +20,8 @@
 
 <nav>
     <ul>
-        <li><a href="playerlist">選手一覧</a></li>
-        <li><a href="eventlist">競技種目一覧</a></li>
+        <li><a href="/playerlist">選手一覧</a></li>
+        <li><a href="/eventlist">競技種目一覧</a></li>
         <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
         <li><a href="#">BBBB</a></li>
         <li><a href="#">CCCC</a></li>
@@ -51,7 +51,7 @@
         <tbody id="player_name_body">
         <tr th:each="player : ${player}">
             <td th:text="${player.playerId}"></td>
-            <td th:text="${player.playerName}"></td>
+            <td><a th:href="@{/recordlist/{playerId}(playerId=${player.playerId})}"  th:text="${player.playerName}"></a></td>
             <td>
                 <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary">更新</button>
             </td>

@@ -18,12 +18,27 @@ ul {
 li {
   list-style: none;
 }
-a {
+li a{
   display: block;
   text-decoration: none;
   color: white;
   margin-right: 35px;
 }
-a:hover {
+li a:hover {
   color: rgb(150, 150, 250);
+}
+textarea {
+  resize: none;
+}
+
+textarea.hidden{
+display: none
+}
+
+th.hidden{
+display: none
+}
+
+td.hidden{
+display: none
 }
