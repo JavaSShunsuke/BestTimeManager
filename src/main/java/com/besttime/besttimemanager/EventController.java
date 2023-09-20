@@ -19,16 +19,23 @@ public class EventController {
         this.dao = dao;
     }
 
+
     record playerItem(String playerId, String playerName, boolean playerFlag) {
 
     }
+
     record eventItem(String eventId, String eventName, boolean eventFlag) {
 
     }
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag, boolean bestFlag) {
 
+    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+                      boolean bestFlag) {
     }
 
+    record lapTimeItem(String lapTimeId, String recordId, String lapTimeNum, String lapTimeRecord,
+                       boolean lapTimeFlag,String lapTimeMemo) {
+
+    }
     @GetMapping("eventlist")
     String listPlayers(Model model){
         List<eventItem> eventItems = this.dao.findEvents();

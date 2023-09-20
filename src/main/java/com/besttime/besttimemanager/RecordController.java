@@ -24,10 +24,17 @@ public class RecordController {
     record playerItem(String playerId, String playerName, boolean playerFlag) {
 
     }
+
     record eventItem(String eventId, String eventName, boolean eventFlag) {
 
     }
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,boolean bestFlag) {
+
+    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+                      boolean bestFlag) {
+    }
+
+    record lapTimeItem(String lapTimeId, String recordId, String lapTimeNum, String lapTimeRecord,
+                       boolean lapTimeFlag,String lapTimeMemo) {
 
     }
         @GetMapping("recordlist/{playerId}")
@@ -42,7 +49,7 @@ public class RecordController {
     }
 
     @GetMapping("/addrecord")
-    String addEvent(Model model,
+    String addRecord(Model model,
                     @RequestParam("playerId") String playerId,
                     @RequestParam("eventId") String eventId,
                     @RequestParam(name="recordTime", defaultValue ="00:00:00",required = false) String  recordTime){
