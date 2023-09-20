@@ -8,6 +8,8 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!--    Jquery-->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <!--    ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!--    Bootstrap-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
             integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
@@ -60,8 +62,9 @@
             <th class="hidden">eventId</th>
             <th>競技名</th>
             <th>記録</th>
+            <th width="80">ラップタイム表示</th>
+            <th width="80">ラップタイム追加</th>
             <th width="80">更新</th>
-            <th width="80">削除</th>
         </tr>
         </thead>
         <tbody id="record_time_body">
@@ -73,6 +76,16 @@
                 <td th:text="${event.eventName}"></td>
             </th:block>
             <td th:text="${record.recordTime}"></td>
+            <td>
+                <button type="submit" name="listLapTime_button" onclick="ListLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#listLapTimeDialog" class="btn btn-info">表示
+                </button>
+            </td>
+            <td>
+                <button type="submit" name="addLapTime_button" onclick="copyToAddLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#addLapTimeDialog" class="btn btn-primary">追加
+                </button>
+            </td>
             <td>
                 <button type="submit" name="update_button" onclick="copyToUpdateRecordDialog(this.parentElement.parentElement);"
                         data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary">更新
@@ -95,7 +108,7 @@
         <div class="modal-content">
             <form action="/updaterecord" name="updateRecord_form">
                 <div class="modal-header">
-                    <h2>記録の更新</h2>
+                    <h2 id="title_eventId">記録の更新</h2>
                 </div>
                 <div class="modal-body">
                     <input id="update_recordId" name="recordId" type="hidden"/>
@@ -108,16 +121,104 @@
                     <textarea id="update_second" name="second" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
                     <label class="minute_label">秒</label>
                     <textarea id="update_millisecond" name="millisecond" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
-                    <input type="submit" value="登録" onclick="updateRecordTime();"/>
                     <textarea class="hidden" name="recordTime" cols="10" rows="1" readonly></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">更新</button>
+                    <button type="submit" class="btn btn-primary" onclick="updateRecordTime();">更新</button>
                     <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+<div id="addLapTimeDialog" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/addlaptime" name="addLapTime_form">
+                <div class="modal-header">
+                    <h2>ラップタイムの追加</h2>
+                </div>
+                <div class="modal-body">
+                    <input id="addLapTime_recordId" name="recordId" type="hidden"/>
+                    <input id="addLapTime_playerId" name="playerId" type="hidden"/>
+                    <label>追加</label>
+                    <br>
+                    <textarea id="addLapTime_num" name="lapTimeNum" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <label class="num_label">番目</label>
+                    <textarea id="addLapTime_minute" name="minute" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <label class="minute_label">分</label>
+                    <textarea id="addLapTime_second" name="second" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <label class="second_label">秒</label>
+                    <textarea id="addLapTime_millisecond" name="millisecond" cols="3" rows="1" placeholder="00" maxlength="2"></textarea>
+                    <br>
+                    <label class="memo_label">備考</label>
+                    <input id="addLapTime_memo" name="lapTimeMemo" type="text">
+                    <textarea class="hidden" name="lapTimeRecord" cols="10" rows="1" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="addLapTime();">更新</button>
+                    <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="listLapTimeDialog" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="listLapTime" action="/listlaptime" name="listLapTime_form">
+                <div class="modal-header">
+                    <h2 id="title_listLapTime">ラップタイム</h2>
+                </div>
+                <table id="table_lapTime" class="table table-bordered" >
+                    <thead>
+                    <tr>
+                        <th>lapTimeId</th>
+                        <th>recordId</th>
+                        <th>番号</th>
+                        <th>記録</th>
+                        <th>備考</th>
+                        <th>削除</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listLapTime_body">
+                    <tr>
+                    <td>aaaa</td>
+                    <td>bbbb</td>
+                    <td>cccc</td>
+                        <td>
+                        <form action="/deletelaptime">
+                            <button name="delete_button" class="btn btn-secondary" onclick="deleteLapTime(this.parentElement.parentElement);">削除</button>
+                        </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="modal-footer">
+                    <button type="reset" data-bs-dismiss="modal" class="btn btn-secondary">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="display:hidden">
+    <table>
+        <tbody>
+        <tr id="table_lapTime_row">
+            <td name="lapTimeId"></td>
+            <td name="recordId"></td>
+            <td name="lapTimeNum"></td>
+            <td name="lapTimeRecord"></td>
+            <td name="lapTimeMemo"></td>
+            <td>
+                    <button name="deleteLapTime_button" class="btn btn-secondary" onMouseDown="deleteLapTime(this.parentElement.parentElement);" hidden>削除</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

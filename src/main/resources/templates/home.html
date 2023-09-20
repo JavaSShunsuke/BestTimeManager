@@ -51,6 +51,7 @@
         <tbody id="player_name_body">
         <tr th:each="player : ${player}">
             <td th:text="${player.playerId}"></td>
+            <td class="hidden" th:text="${player.playerName}"></td>
             <td><a th:href="@{/recordlist/{playerId}(playerId=${player.playerId})}"  th:text="${player.playerName}"></a></td>
             <td>
                 <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary">更新</button>
