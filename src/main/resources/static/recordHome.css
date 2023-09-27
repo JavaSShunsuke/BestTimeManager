@@ -1,0 +1,13 @@
+/*
+td button{
+writing-mode: vertical-rl;
+}
+*/
+
+td{
+vertical-align: middle;
+}
+
+th{
+vertical-align: middle;
+}

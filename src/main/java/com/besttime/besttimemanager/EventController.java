@@ -28,7 +28,7 @@ public class EventController {
 
     }
 
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+    record recordItem(String recordId, String playerId, String eventId, String addNowDate,String recordTime, boolean recordFlag,
                       boolean bestFlag) {
     }
 
@@ -64,5 +64,13 @@ public class EventController {
         eventItem item = new eventItem(id,name,true);
         this.dao.updateEvent(item);
         return "redirect:/eventlist";
+    }
+
+    @GetMapping("searchevent_inevent")
+    String listPlayers(Model model,
+                       @RequestParam("searchEventName")String searchEventName){
+        List<eventItem> eventItems = this.dao.searchEventInEvent(searchEventName);
+        model.addAttribute("event", eventItems);
+        return "eventHome";
     }
 }

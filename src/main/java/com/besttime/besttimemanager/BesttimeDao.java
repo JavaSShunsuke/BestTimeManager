@@ -1,14 +1,13 @@
 package com.besttime.besttimemanager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +64,7 @@ public class BesttimeDao {
     }
 
     public <LIst> List<EventController.eventItem> findEvents() {
-        String query = "SELECT * FROM " + "event WHERE eventFlag=true";
+        String query = "SELECT * FROM " + "event WHERE eventFlag=true ORDER BY eventName ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<EventController.eventItem> list = result.stream().map(
                 (Map<String, Object> row) -> new EventController.eventItem(
@@ -98,9 +97,26 @@ public class BesttimeDao {
     }
 
     public int updateBestFlag(RecordController.recordItem recordItem) {
-        int number = jdbcTemplate.update("UPDATE record SET BestFlag=false WHERE playerId = ? AND eventId = ?",
-                recordItem.playerId(),
-                recordItem.eventId());
+        String query = "SELECT recordTime FROM " + "record WHERE playerId='" + recordItem.playerId() + "' AND eventId='" + recordItem.eventId() + "'AND BestFlag=true";
+        String bestTime = "00:00:00";
+        try {
+            bestTime = this.jdbcTemplate.queryForObject(query, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            bestTime = "99:99:99";
+        }
+        String newTime = recordItem.recordTime();
+        int bestI =Integer.parseInt(bestTime.replace(":", ""));
+        int newI =Integer.parseInt(newTime.replace(":", ""));
+
+        int number = 0;
+        if (bestI>=newI) {
+            number = jdbcTemplate.update("UPDATE record SET BestFlag=false WHERE playerId = ? AND eventId = ?",
+                    recordItem.playerId(),
+                    recordItem.eventId()
+            );
+        } else {
+            number = -1;
+        }
         return number;
     }
 
@@ -112,6 +128,8 @@ public class BesttimeDao {
                         row.get("recordId").toString(),
                         row.get("playerId").toString(),
                         row.get("eventId").toString(),
+                        row.get("eventName").toString(),
+                        row.get("addNowDate").toString(),
                         row.get("recordTime").toString(),
                         (Boolean) row.get("recordFlag"),
                         (Boolean) row.get("bestFlag")
@@ -126,7 +144,8 @@ public class BesttimeDao {
     }
 
     public int updateRecord(RecordController.recordItem recordItem) {
-        int number = jdbcTemplate.update("UPDATE record set recordTime=? where recordId = ?",
+        int number = jdbcTemplate.update("UPDATE record set addNowDate=?,recordTime=? where recordId = ?",
+                recordItem.addNowDate(),
                 recordItem.recordTime(),
                 recordItem.recordId());
         return number;
@@ -138,11 +157,11 @@ public class BesttimeDao {
         return name;
     }
 
-    //    public String findEventName(String eventId) {
-//        String query = "SELECT eventName FROM " + "event WHERE eventId='"+eventId+"'";
-//        String name =this.jdbcTemplate.queryForObject(query,String.class);
-//        return name;
-//    }
+        public String findEventName(String eventId) {
+        String query = "SELECT eventName FROM " + "event WHERE eventId='"+eventId+"'";
+        String name =this.jdbcTemplate.queryForObject(query,String.class);
+        return name;
+    }
     public int addLapTime(LapTimeController.lapTimeItem item) {
         SqlParameterSource param = new BeanPropertySqlParameterSource(item);
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
@@ -174,5 +193,72 @@ public class BesttimeDao {
     public int deleteLapTime(String lapTimeId) {
         int number = jdbcTemplate.update("UPDATE lapTime SET lapTimeFlag=? WHERE lapTimeId = ?", false, lapTimeId);
         return number;
+    }
+
+    public <LIst> List<RecordController.recordItem> searchEventInRecord(String playerId ,String searchEventName) {
+        String query = "SELECT * FROM " + "record WHERE recordFlag=true AND bestFlag=true AND eventName like '%" + searchEventName + "%' AND playerId='"+playerId+"'";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<RecordController.recordItem> list = result.stream().map(
+                (Map<String, Object> row) -> new RecordController.recordItem(
+                        row.get("recordId").toString(),
+                        row.get("playerId").toString(),
+                        row.get("eventId").toString(),
+                        row.get("eventName").toString(),
+                        row.get("addNowDate").toString(),
+                        row.get("recordTime").toString(),
+                        (Boolean) row.get("recordFlag"),
+                        (Boolean) row.get("bestFlag")
+
+                )).toList();
+        return list;
+    }
+
+    public <LIst> List<EventController.eventItem> searchEventInEvent(String searchEventName) {
+        String query = "SELECT * FROM " + "event WHERE eventFlag=true AND eventName like '%" + searchEventName + "%'";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<EventController.eventItem> list = result.stream().map(
+                (Map<String, Object> row) -> new EventController.eventItem(
+                        row.get("eventId").toString(),
+                        row.get("eventName").toString(),
+                        (Boolean) row.get("eventFlag")
+
+                )).toList();
+        return list;
+    }
+
+    public <LIst> List<PlayerController.playerItem> searchPlayerInPlayer(String searchPlayerName) {
+        String query = "SELECT * FROM " + "player WHERE playerFlag=true AND playerName like '%" + searchPlayerName + "%'";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<PlayerController.playerItem> list = result.stream().map(
+                (Map<String, Object> row) -> new PlayerController.playerItem(
+                        row.get("playerId").toString(),
+                        row.get("playerName").toString(),
+                        (Boolean) row.get("playerFlag")
+
+                )).toList();
+        return list;
+    }
+
+    public String searchEventName(String eventId) {
+        String query = "SELECT eventName FROM event WHERE eventId='"+ eventId +"'" ;
+        return this.jdbcTemplate.queryForObject(query, String.class);
+    }
+
+    public <LIst> List<RecordArchiveController.recordItem> findArchiveRecords(String playerId,String eventId) {
+        String query = "SELECT * FROM " + "record WHERE playerId='" + playerId + "' AND eventId='" + eventId + "' ORDER BY addNowDate ASC";
+        List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
+        List<RecordArchiveController.recordItem> list = result.stream().map(
+                (Map<String, Object> row) -> new RecordArchiveController.recordItem(
+                        row.get("recordId").toString(),
+                        row.get("playerId").toString(),
+                        row.get("eventId").toString(),
+                        row.get("eventName").toString(),
+                        row.get("addNowDate").toString(),
+                        row.get("recordTime").toString(),
+                        (Boolean) row.get("recordFlag"),
+                        (Boolean) row.get("bestFlag")
+
+                )).toList();
+        return list;
     }
 }

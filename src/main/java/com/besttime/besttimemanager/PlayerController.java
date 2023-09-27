@@ -27,7 +27,7 @@ public class PlayerController {
 
     }
 
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+    record recordItem(String recordId, String playerId, String eventId, String addNowDate,String recordTime, boolean recordFlag,
                       boolean bestFlag) {
     }
 
@@ -59,10 +59,17 @@ public class PlayerController {
     }
 
     @GetMapping("/updateplayer")
-    String updateItem(@RequestParam(name = "playerName", required = false, defaultValue ="default") String id,
-                      @RequestParam("playerName") String name) {
+    String updateItem(@RequestParam("playerId") String id,
+                      @RequestParam(name = "playerName", required = false, defaultValue ="default") String name) {
         playerItem item = new playerItem(id,name,true);
         this.dao.updatePlayer(item);
         return "redirect:/playerlist";
+    }
+    @GetMapping("searchplayer_inplayer")
+    String listPlayers(Model model,
+                       @RequestParam("searchPlayerName")String searchPlayerName){
+        List<PlayerController.playerItem> playerItems = this.dao.searchPlayerInPlayer(searchPlayerName);
+        model.addAttribute("player", playerItems);
+        return "home";
     }
 }

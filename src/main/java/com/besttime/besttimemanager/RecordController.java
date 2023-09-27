@@ -29,7 +29,7 @@ public class RecordController {
 
     }
 
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+    record recordItem(String recordId, String playerId, String eventId,String eventName, String addNowDate, String recordTime, boolean recordFlag,
                       boolean bestFlag) {
     }
 
@@ -52,10 +52,14 @@ public class RecordController {
     String addRecord(Model model,
                     @RequestParam("playerId") String playerId,
                     @RequestParam("eventId") String eventId,
+                    @RequestParam(name="addNowDate",defaultValue = "0000-00-00",required = false) String addNowDate,
                     @RequestParam(name="recordTime", defaultValue ="00:00:00",required = false) String  recordTime){
         String recordId = UUID.randomUUID().toString().substring(0, 8);
-        recordItem item = new recordItem(recordId,playerId,eventId,recordTime,true,true);
-        this.dao.updateBestFlag(item);
+        String eventName = this.dao.searchEventName(eventId);
+        recordItem item = new recordItem(recordId,playerId,eventId,eventName,addNowDate,recordTime,true,true);
+        if (this.dao.updateBestFlag(item) < 0) {
+            item = new recordItem(recordId, playerId, eventId, eventName, addNowDate, recordTime, false, false);
+        }
         this.dao.addRecord(item);
         return "redirect:/recordlist/" + playerId;
     }
@@ -72,11 +76,25 @@ public class RecordController {
     String updateItem(@RequestParam("recordId") String recordId,
                       @RequestParam("playerId") String playerId,
                       @RequestParam("eventId") String eventId,
+                      @RequestParam(name="addNowDate",defaultValue = "0000-00-00",required = false) String addNowDate,
                       @RequestParam("recordTime") String recordTime) {
-        recordItem item = new recordItem(recordId,playerId,eventId,recordTime,true,true);
+        String eventName = this.dao.searchEventName(eventId);
+        recordItem item = new recordItem(recordId,playerId,eventId,eventName,addNowDate,recordTime,true,true);
         this.dao.updateRecord(item);
         return "redirect:/recordlist/" + playerId;
     }
-
+    @GetMapping("/{playerId}/searchevent_inrecord")
+    String listPlayers(Model model,
+                       @PathVariable("playerId") String playerId,
+                       @RequestParam("searchEventName")String searchEventName){
+        List<RecordController.recordItem> recordItems = this.dao.searchEventInRecord(playerId,searchEventName);
+        model.addAttribute("record", recordItems);
+        List<EventController.eventItem> eventItems = this.dao.findEvents();
+        model.addAttribute("event", eventItems);
+        model.addAttribute("record", recordItems);
+        model.addAttribute("playerHistory",this.dao.findPlayerName(playerId));
+        model.addAttribute("inputPlayerId",playerId);
+        return "recordHome";
+    }
 
 }

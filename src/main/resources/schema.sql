@@ -14,9 +14,11 @@ CREATE TABLE IF NOT EXISTS record(
     recordId VARCHAR(8)   PRIMARY KEY,
     playerId VARCHAR(8),
     eventId VARCHAR(8),
+    eventName VARCHAR(256),
     recordTime VARCHAR(32),
-    lapTimeFlag VARCHAR(32),
+    recordFlag VARCHAR(32),
     bestFlag BOOLEAN,
+    addNowDate VARCHAR(32),
     FOREIGN KEY(playerId)
     REFERENCES player(playerId),
     FOREIGN KEY(eventId)

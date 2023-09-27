@@ -27,18 +27,14 @@ li a{
 li a:hover {
   color: rgb(150, 150, 250);
 }
-textarea {
-  resize: none;
+.hidden{
+display:none
 }
 
-textarea.hidden{
-display: none
+td{
+vertical-align: middle;
 }
 
-th.hidden{
-display: none
-}
-
-td.hidden{
-display: none
+th{
+vertical-align: middle;
 }

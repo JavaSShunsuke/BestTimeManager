@@ -39,6 +39,11 @@
 
 <div>
     <h2>選手一覧</h2>
+    <form action="/searchplayer_inplayer">
+        <label>選手名検索</label>
+        <input type="text" id="searchPlayerName" name="searchPlayerName">
+        <button type="submit">検索</button>
+    </form>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -87,3 +92,26 @@
         </div>
     </div>
 </div>
+
+<!--<div style="display:hidden">-->
+<!--    <table>-->
+<!--        <tbody>-->
+<!--        <tr id="player_name_row">-->
+<!--            <td name="playerId"></td>-->
+<!--            <td name="playerName" hidden></td>-->
+<!--            <td><a name="clone_href" th:href="@{/recordlist/playerId}" hidden>playerName</a></td>-->
+<!--            <td>-->
+<!--                <button type="submit" name="clone_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary" hidden>更新</button>-->
+<!--            </td>-->
+<!--            <td>-->
+<!--                <form action="/deleteplayer">-->
+<!--                    <button type="submit" name="clone_button" class="btn btn-secondary" hidden>削除</button>-->
+<!--                    <input type="hidden" name="playerId" value="" id="clonePlayerId"/>-->
+<!--                </form>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+</body>
+</html>

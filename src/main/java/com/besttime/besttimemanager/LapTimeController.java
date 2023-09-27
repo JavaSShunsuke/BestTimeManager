@@ -27,7 +27,7 @@ public class LapTimeController {
 
     }
 
-    record recordItem(String recordId, String playerId, String eventId, String recordTime, boolean recordFlag,
+    record recordItem(String recordId, String playerId, String eventId, String addNowDate,String recordTime, boolean recordFlag,
                       boolean bestFlag) {
     }
 
