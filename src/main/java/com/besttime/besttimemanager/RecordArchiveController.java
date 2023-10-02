@@ -25,7 +25,7 @@ public class RecordArchiveController {
                       boolean bestFlag) {
     }
 
-    @GetMapping("recordlist/{playerId}/{eventId}")
+    @GetMapping("/recordarchive/{playerId}/{eventId}")
     String listRecord(Model model ,
                       @PathVariable("playerId") String playerId,
                       @PathVariable("eventId") String eventId){

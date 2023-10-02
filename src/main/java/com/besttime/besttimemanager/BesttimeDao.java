@@ -121,7 +121,7 @@ public class BesttimeDao {
     }
 
     public <LIst> List<RecordController.recordItem> findBestRecords(String playerId) {
-        String query = "SELECT * FROM " + "record WHERE recordFlag=true AND bestFlag=true AND playerId='" + playerId + "'";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE recordFlag=true AND bestFlag=true AND playerId='" + playerId + "'";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordController.recordItem> list = result.stream().map(
                 (Map<String, Object> row) -> new RecordController.recordItem(
@@ -196,7 +196,7 @@ public class BesttimeDao {
     }
 
     public <LIst> List<RecordController.recordItem> searchEventInRecord(String playerId ,String searchEventName) {
-        String query = "SELECT * FROM " + "record WHERE recordFlag=true AND bestFlag=true AND eventName like '%" + searchEventName + "%' AND playerId='"+playerId+"'";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE recordFlag=true AND bestFlag=true AND eventName like '%" + searchEventName + "%' AND playerId='"+playerId+"'";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordController.recordItem> list = result.stream().map(
                 (Map<String, Object> row) -> new RecordController.recordItem(
@@ -245,7 +245,7 @@ public class BesttimeDao {
     }
 
     public <LIst> List<RecordArchiveController.recordItem> findArchiveRecords(String playerId,String eventId) {
-        String query = "SELECT * FROM " + "record WHERE playerId='" + playerId + "' AND eventId='" + eventId + "' ORDER BY addNowDate ASC";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE playerId='" + playerId + "' AND record.eventId='" + eventId + "' ORDER BY addNowDate ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordArchiveController.recordItem> list = result.stream().map(
                 (Map<String, Object> row) -> new RecordArchiveController.recordItem(

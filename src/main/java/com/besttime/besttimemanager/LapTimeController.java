@@ -2,12 +2,9 @@ package com.besttime.besttimemanager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.sql.Time;
-import java.util.List;
 import java.util.UUID;
 
 @Controller

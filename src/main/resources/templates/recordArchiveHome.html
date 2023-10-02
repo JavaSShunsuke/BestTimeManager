@@ -12,6 +12,10 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 <!--        home.js読み込み-->
     <script th:src="@{/recordArchiveHome.js}"></script>
+<!--    chart.js読み込み-->
+        <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js}"></script>
+    <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/combine/npm/moment@2.29.1,npm/chartjs-adapter-moment@1.0.0}"></script>
 <!--    home.css読み込み-->
     <link th:href="@{/home.css}" rel="stylesheet">
     <link th:href="@{/recordHome.css}" rel="stylesheet">
@@ -30,7 +34,7 @@
     </ul>
 </nav>
 
-
+<canvas id="lineChart"></canvas>
 <div>
     <h2>記録一覧</h2>
     <table class="table table-bordered">

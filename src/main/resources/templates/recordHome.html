@@ -57,8 +57,9 @@
 </form>
 <div>
     <h2>記録一覧</h2>
-    <form action="" id="searchInRecord">
+    <form action="/searchevent_inrecord" id="searchInRecord">
         <label>競技名検索</label>
+        <input type="hidden" id="playerId" name="playerId" th:value="${inputPlayerId}">
         <input type="text" id="searchEventName" name="searchEventName">
     <button type="submit">検索</button>
     </form>
@@ -81,7 +82,7 @@
             <td class="hidden" th:text="${record.playerId}"></td>
             <td class="hidden" th:text="${record.eventId}"></td>
             <td th:text="${record.eventName}" class="hidden"></td>
-            <td><a th:href="@{./{playerId}/{eventId}(playerId=${record.playerId},eventId=${record.eventId})}"  th:text="${record.eventName}"></a></td>
+            <td><a th:href="@{/recordarchive/{playerId}/{eventId}(playerId=${record.playerId},eventId=${record.eventId})}"  th:text="${record.eventName}"></a></td>
             <td th:text="${record.addNowDate}"></td>
             <td th:text="${record.recordTime}"></td>
             <td>
@@ -211,6 +212,55 @@
             </form>
         </div>
     </div>
+</div><div style="display:hidden">
+    <table>
+        <tbody>
+        <tr id="table_lapTime_row">
+            <td name="lapTimeId" class="hidden"></td>
+            <td name="recordId" class="hidden"></td>
+            <td name="lapTimeNum"></td>
+            <td name="lapTimeRecord"></td>
+            <td name="lapTimeMemo"></td>
+            <td>
+                <button name="deleteLapTime_button" class="btn btn-secondary" onMouseDown="deleteLapTime(this.parentElement.parentElement);" hidden>削除</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="display:hidden">
+    <table>
+        <tbody>
+        <tr id="record_time_row">
+            <td name="recordId"></td>
+            <td name="playerId" class="hidden"></td>
+            <td name="eventId" class="hidden"></td>
+            <td name="eventName"></td>
+            <td name="addNowDate"></td>
+            <td name="recordTime"></td>
+            <td>
+                <button type="submit" name="clone-button" onclick="copyToAddLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#addLapTimeDialog" class="btn btn-primary" hidden>追加
+                </button>
+                <br>
+                <button type="submit" name="clone-button" onclick="ListLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#listLapTimeDialog" class="btn btn-info" hidden>表示
+                </button>
+            </td>
+            <td>
+                <button type="submit" name="clone-button" onclick="copyToUpdateRecordDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary" hidden>更新
+                </button>
+                <form action="/deleterecord">
+                    <button type="submit" name="clone-button" class="btn btn-secondary" hidden>削除</button>
+                    <input id="cloneRecordId" type="hidden" name="recordId" value="" />
+                    <input id="clonePlayerId" type="hidden" name="playerId" value="" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
