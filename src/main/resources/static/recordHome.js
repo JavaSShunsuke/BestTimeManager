@@ -108,8 +108,10 @@
                             $obj.find("[name=lapTimeMemo]").text(lapTimeMemo);
                             $obj.find("[name=deleteLapTime_button]").removeAttr('hidden');
                             $("#listLapTime_body").append($obj);
+                            console.log(lapTimeRecord);
+                            console.log("aaaa");
+console.log(lapTimeRecord);
                           }
-
                         });
                     }
 
@@ -132,7 +134,7 @@
                 var text = nowYear + "-" + nowMonth + "-" + nowDay;
                 document.getElementById("nowDate").value=text;
                 let playerId=location.pathname.substring(12,20);
-                document.getElementById("searchInRecord").action="/"+ playerId +"/searchevent_inrecord";
+//                document.getElementById("searchInRecord").action="/recordlist/"+ playerId +"/searchevent_inrecord";
               }
 
 //    function searchEventInRecord(){
