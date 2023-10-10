@@ -20,18 +20,15 @@
 
 <nav>
     <ul>
-        <li><a href="/playerlist">選手一覧</a></li>
-        <li><a href="/eventlist">競技種目一覧</a></li>
-        <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
-        <li><a href="#">BBBB</a></li>
-        <li><a href="#">CCCC</a></li>
+        <li><a href="/player_list">選手一覧</a></li>
+        <li><a href="/event_list">競技種目一覧</a></li>
     </ul>
 </nav>
 
-<form action="/addevent">
+<form action="/add_event">
 <div class="event_form">
     <h2>競技の登録</h2>
-    <label class="form-label">競技名</label>
+    <label for="new_eventName" class="form-label">競技名</label>
     <input name="eventName" class="form-control" type="text" id="new_eventName" />
     <input type="submit" value="登録"/>
 </div>
@@ -40,8 +37,8 @@
 <div>
     <h2>競技一覧</h2>
 
-    <form action="/searchevent_inevent">
-        <label>競技名検索</label>
+    <form action="/search_event_in_event">
+        <label for="searchEventName">競技名検索</label>
         <input type="text" id="searchEventName" name="searchEventName">
         <button type="submit">検索</button>
     </form>
@@ -62,7 +59,7 @@
                 <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#eventUpdateDialog" class="btn btn-primary">更新</button>
             </td>
             <td>
-                <form action="/deleteevent">
+                <form action="/delete_event">
                     <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
                     <input type="hidden" name="eventId" th:value="${event.eventId}" />
                 </form>
@@ -75,7 +72,7 @@
 <div id="eventUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/updateevent">
+            <form action="/update_event">
                 <div class="modal-header">
                     <h2>競技の更新</h2>
                 </div>

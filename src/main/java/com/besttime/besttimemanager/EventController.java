@@ -6,67 +6,58 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
 public class EventController {
-    private final BesttimeDao dao;
+    private final BestTimeDao dao;
 
     @Autowired
-    public EventController(BesttimeDao dao) {
+    public EventController(BestTimeDao dao) {
         this.dao = dao;
     }
 
-
-    record playerItem(String playerId, String playerName, boolean playerFlag) {
-
-    }
-
     record eventItem(String eventId, String eventName, boolean eventFlag) {
-
     }
 
-    record recordItem(String recordId, String playerId, String eventId, String addNowDate,String recordTime, boolean recordFlag,
-                      boolean bestFlag) {
-    }
-
-    record lapTimeItem(String lapTimeId, String recordId, String lapTimeNum, String lapTimeRecord,
-                       boolean lapTimeFlag,String lapTimeMemo) {
-
-    }
-    @GetMapping("eventlist")
+    //種目一覧画面
+    @GetMapping("event_list")
     String listPlayers(Model model){
         List<eventItem> eventItems = this.dao.findEvents();
         model.addAttribute("event", eventItems);
         return "eventHome";
     }
 
-    @GetMapping("/addevent")
-    String addEvent(@RequestParam(name="eventName", defaultValue = "default") String Name){
+    //種目追加
+    @GetMapping("/add_event")
+    String addEvent(
+            @RequestParam(name="eventName", defaultValue = "default") String Name
+    ){
         String id = UUID.randomUUID().toString().substring(0, 8);
         eventItem item = new eventItem(id,Name,true);
         this.dao.addEvent(item);
-
-        return "redirect:/eventlist";
+        return "redirect:/event_list";
     }
 
-    @GetMapping("/deleteevent")
+    //種目削除（論理削除）
+    @GetMapping("/delete_event")
     String deleteItem(@RequestParam("eventId") String id) {
         this.dao.deleteEvent(id);
-        return "redirect:/eventlist";
+        return "redirect:/event_list";
     }
 
-    @GetMapping("/updateevent")
+    //種目名更新
+    @GetMapping("/update_event")
     String updateItem(@RequestParam("eventId") String id,
                       @RequestParam(name="eventName", defaultValue = "default") String name) {
         eventItem item = new eventItem(id,name,true);
         this.dao.updateEvent(item);
-        return "redirect:/eventlist";
+        return "redirect:/event_list";
     }
 
-    @GetMapping("searchevent_inevent")
+    //種目一覧で種目名検索
+    @GetMapping("search_event_in_event")
     String listPlayers(Model model,
                        @RequestParam("searchEventName")String searchEventName){
         List<eventItem> eventItems = this.dao.searchEventInEvent(searchEventName);

@@ -26,39 +26,37 @@
 
 <nav>
     <ul>
-        <li><a href="/playerlist">選手一覧</a></li>
-        <li><a href="/eventlist">競技種目一覧</a></li>
-        <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
-        <li><a href="#">BBBB</a></li>
-        <li><a href="#">CCCC</a></li>
+        <li><a href="/player_list">選手一覧</a></li>
+        <li><a href="/event_list">競技種目一覧</a></li>
     </ul>
 </nav>
 
-<form action="/addrecord" name="record_form">
+<form action="/add_record" name="record_form">
     <div class="record_form">
         <h2>記録の登録</h2>
         <input type="hidden" name="playerId" th:value="${playerId}">
-        <label class="form-label">競技</label>
-        <select name="eventId">
+        <label class="form-label" for="select_eventId">競技</label>
+        <select name="eventId" id="select_eventId">
                 <option th:each="event : ${event}" th:value="${event.eventId}" th:inline="text">[[${event.eventName}]]</option>
         </select>
-        <label>登録日</label>
+        <label for="nowDate">登録日</label>
         <input type="date" id="nowDate" name="addNowDate"/>
         <br>
-        <label class="form-label">記録</label>
-        <input type="number" name="minute" placeholder="00" min="00" max="60">
-        <label class="minute_label">分</label>
-        <input type="number" name="second"  placeholder="00" maxlength="2" min="00" max="60">
-        <label class="minute_label">秒</label>
-        <input type="number" name="millisecond"  placeholder="00" maxlength="2" min="00" max="99">
+        <label class="form-label" for="add_minute">記録</label>
+        <input id="add_minute" type="number" name="minute" placeholder="00" min="00" max="60">
+        <label class="minute_label" for="add_second">分</label>
+        <input id="add_second" type="number" name="second"  placeholder="00" maxlength="2" min="00" max="60">
+        <label class="minute_label" for="add_millisecond">秒</label>
+        <input id="add_millisecond" type="number" name="millisecond"  placeholder="00" maxlength="2" min="00" max="99">
         <input type="submit" value="登録" onclick="outputRecordTime();"/>
         <input type="hidden" class="hidden" name="recordTime" readonly>
     </div>
 </form>
 <div>
     <h2>記録一覧</h2>
-    <form action="" id="searchInRecord">
-        <label>競技名検索</label>
+    <form th:action="@{/record_list/{playerId}/search_event_in_record(playerId=${inputPlayerId})}" id="searchInRecord">
+        <label for="searchEventName">競技名検索</label>
+        <input type="hidden" id="playerId" name="playerId" th:value="${inputPlayerId}">
         <input type="text" id="searchEventName" name="searchEventName">
     <button type="submit">検索</button>
     </form>
@@ -81,7 +79,7 @@
             <td class="hidden" th:text="${record.playerId}"></td>
             <td class="hidden" th:text="${record.eventId}"></td>
             <td th:text="${record.eventName}" class="hidden"></td>
-            <td><a th:href="@{./{playerId}/{eventId}(playerId=${record.playerId},eventId=${record.eventId})}"  th:text="${record.eventName}"></a></td>
+            <td><a th:href="@{/record_archive/{playerId}/{eventId}(playerId=${record.playerId},eventId=${record.eventId})}"  th:text="${record.eventName}"></a></td>
             <td th:text="${record.addNowDate}"></td>
             <td th:text="${record.recordTime}"></td>
             <td>
@@ -95,9 +93,9 @@
             </td>
             <td>
                 <button type="submit" name="update_button" onclick="copyToUpdateRecordDialog(this.parentElement.parentElement);"
-                        data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary">更新
+                        data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary">修正
                 </button>
-                <form action="/deleterecord">
+                <form action="/delete_record">
                     <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
                     <input type="hidden" name="recordId" th:value="${record.recordId}" />
                     <input type="hidden" name="playerId" th:value="${record.playerId}" />
@@ -111,7 +109,7 @@
 <div id="recordUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/updaterecord" name="updateRecord_form">
+            <form action="/update_record" name="updateRecord_form">
                 <div class="modal-header">
                     <h2 id="title_eventId">記録の更新</h2>
                 </div>
@@ -119,14 +117,15 @@
                     <input id="update_recordId" name="recordId" type="hidden"/>
                     <input id="update_playerId" name="playerId" type="hidden"/>
                     <input id="update_eventId" name="eventId" type="hidden"/>
-                    <label>登録日</label>
+                    <label for="update_addNowDate">登録日</label>
                     <input type="date" id="update_addNowDate" name="addNowDate"/>
                     <br>
                     <label>記録</label>
                     <input type="number" id="update_minute" name="minute" placeholder="00" min="00" max="60">
-                    <label class="minute_label">分</label>
+                    <label for="update_minute" class="minute_label">分</label>
                     <input type="number" id="update_second" name="second" placeholder="00" min="00" max="60">
-                    <label class="minute_label">秒</label>
+                    <label for="update_second" class="minute_label">秒</label>
+                    <label for="update_millisecond"></label>
                     <input type="number" id="update_millisecond" name="millisecond" placeholder="00" min="00" max="99">
                     <input type="hidden" name="recordTime" readonly>
                 </div>
@@ -142,7 +141,7 @@
 <div id="addLapTimeDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/addlaptime" name="addLapTime_form">
+            <form action="/add_lap_time" name="addLapTime_form">
                 <div class="modal-header">
                     <h2>ラップタイムの追加</h2>
                 </div>
@@ -153,17 +152,17 @@
                     <label>追加</label>
                     <br>
                     <input type="number" id="addLapTime_num" name="lapTimeNum" placeholder="00" min="00" max="60">
-                    <label class="num_label">番目</label>
+                    <label for="addLapTime_num" class="num_label">番目</label>
                     <br>
                     <input type="number" id="addLapTime_minute" name="minute" placeholder="00" min="00" max="60">
-                    <label class="minute_label">分</label>
+                    <label for="addLapTime_minute" class="minute_label">分</label>
                     <input type="number" id="addLapTime_second" name="second" placeholder="00" min="00" max="60">
-                    <label class="second_label">秒</label>
-                    <input type="number" id="addLapTime_millisecond" name="millisecond" placeholder="00" min="00" max="60">
+                    <label for="addLapTime_second" class="second_label">秒</label>
+                    <label for="addLapTime_millisecond"></label><input type="number" id="addLapTime_millisecond" name="millisecond" placeholder="00" min="00" max="60">
                     <br>
-                    <label class="memo_label">備考</label>
+                    <label for="addLapTime_memo" class="memo_label">備考</label>
                     <input id="addLapTime_memo" name="lapTimeMemo" type="text">
-                    <input type="hidden" name="lapTimeRecord" cols="10" rows="1" readonly>
+                    <input type="hidden" name="lapTimeRecord" readonly>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="addLapTime();">更新</button>
@@ -177,7 +176,7 @@
 <div id="listLapTimeDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="listLapTime" action="/listlaptime" name="listLapTime_form">
+            <form id="listLapTime" action="/list_lap_time" name="listLapTime_form">
                 <div class="modal-header">
                     <h2 id="title_listLapTime">ラップタイム</h2>
                 </div>
@@ -194,11 +193,11 @@
                     </thead>
                     <tbody id="listLapTime_body">
                     <tr>
-                    <td>aaaa</td>
-                    <td>bbbb</td>
-                    <td>cccc</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                         <td>
-                        <form action="/deletelaptime">
+                        <form action="/delete_lap_time">
                             <button name="delete_button" class="btn btn-secondary" onclick="deleteLapTime(this.parentElement.parentElement);">削除</button>
                         </form>
                         </td>
@@ -211,6 +210,55 @@
             </form>
         </div>
     </div>
+</div><div style="display:hidden">
+    <table>
+        <tbody>
+        <tr id="table_lapTime_row">
+            <td name="lapTimeId" class="hidden"></td>
+            <td name="recordId" class="hidden"></td>
+            <td name="lapTimeNum"></td>
+            <td name="lapTimeRecord"></td>
+            <td name="lapTimeMemo"></td>
+            <td>
+                <button name="deleteLapTime_button" class="btn btn-secondary" onMouseDown="deleteLapTime(this.parentElement.parentElement);" hidden>削除</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="display:hidden">
+    <table>
+        <tbody>
+        <tr id="record_time_row">
+            <td name="recordId"></td>
+            <td name="playerId" class="hidden"></td>
+            <td name="eventId" class="hidden"></td>
+            <td name="eventName"></td>
+            <td name="addNowDate"></td>
+            <td name="recordTime"></td>
+            <td>
+                <button type="submit" name="clone-button" onclick="copyToAddLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#addLapTimeDialog" class="btn btn-primary" hidden>追加
+                </button>
+                <br>
+                <button type="submit" name="clone-button" onclick="ListLapTimeDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#listLapTimeDialog" class="btn btn-info" hidden>表示
+                </button>
+            </td>
+            <td>
+                <button type="submit" name="clone-button" onclick="copyToUpdateRecordDialog(this.parentElement.parentElement);"
+                        data-bs-toggle="modal" data-bs-target="#recordUpdateDialog" class="btn btn-primary" hidden>更新
+                </button>
+                <form action="/delete_record">
+                    <button type="submit" name="clone-button" class="btn btn-secondary" hidden>削除</button>
+                    <input id="cloneRecordId" type="hidden" name="recordId" value="" />
+                    <input id="clonePlayerId" type="hidden" name="playerId" value="" />
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

@@ -12,21 +12,26 @@ nav {
     top: 0;
     left: 0;
 }
+
 ul {
   display: flex;
 }
+
 li {
   list-style: none;
 }
+
 li a{
   display: block;
   text-decoration: none;
   color: white;
   margin-right: 35px;
 }
+
 li a:hover {
   color: rgb(150, 150, 250);
 }
+
 .hidden{
 display:none
 }
