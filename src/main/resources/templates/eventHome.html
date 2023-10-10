@@ -25,43 +25,43 @@
     </ul>
 </nav>
 
-<form action="/add_player">
-<div class="player_form">
-    <h2>選手の登録</h2>
-    <label for="new_playerName" class="form-label">選手名</label>
-    <input name="playerName" class="form-control" type="text" id="new_playerName" />
+<form action="/add_event">
+<div class="event_form">
+    <h2>競技の登録</h2>
+    <label for="new_eventName" class="form-label">競技名</label>
+    <input name="eventName" class="form-control" type="text" id="new_eventName" />
     <input type="submit" value="登録"/>
 </div>
 </form>
 
 <div>
-    <h2>選手一覧</h2>
-    <form action="/search_player_in_player">
-        <label for="searchPlayerName">選手名検索</label>
-        <input type="text" id="searchPlayerName" name="searchPlayerName">
+    <h2>競技一覧</h2>
+
+    <form action="/search_event_in_event">
+        <label for="searchEventName">競技名検索</label>
+        <input type="text" id="searchEventName" name="searchEventName">
         <button type="submit">検索</button>
     </form>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th width="150">ID</th>
-            <th>選手名</th>
+            <th>競技名</th>
             <th width="80">更新</th>
             <th width="80">削除</th>
         </tr>
         </thead>
-        <tbody id="player_name_body">
-        <tr th:each="player : ${player}">
-            <td th:text="${player.playerId}"></td>
-            <td class="hidden" th:text="${player.playerName}"></td>
-            <td><a th:href="@{/record_list/{playerId}(playerId=${player.playerId})}"  th:text="${player.playerName}"></a></td>
+        <tbody id="event_name_body">
+        <tr th:each="event : ${event}">
+            <td th:text="${event.eventId}"></td>
+            <td th:text="${event.eventName}"></td>
             <td>
-                <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary">更新</button>
+                <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#eventUpdateDialog" class="btn btn-primary">更新</button>
             </td>
             <td>
-                <form action="/delete_player">
+                <form action="/delete_event">
                     <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
-                    <input type="hidden" name="playerId" th:value="${player.playerId}" />
+                    <input type="hidden" name="eventId" th:value="${event.eventId}" />
                 </form>
             </td>
         </tr>
@@ -69,17 +69,17 @@
     </table>
 </div>
 
-<div id="playerUpdateDialog" class="modal fade" tabindex="-1">
+<div id="eventUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/update_player">
+            <form action="/update_event">
                 <div class="modal-header">
-                    <h2>選手の更新</h2>
+                    <h2>競技の更新</h2>
                 </div>
                 <div class="modal-body">
-                    <input id="update_id" name="playerId" type="hidden"/>
-                    <label for="update_name">選手名</label>
-                    <input id="update_name" class="form-control" name="playerName" type="text"/>
+                    <input id="update_id" name="eventId" type="hidden"/>
+                    <label for="update_name">競技名</label>
+                    <input id="update_name" class="form-control" name="eventName" type="text"/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">更新</button>
