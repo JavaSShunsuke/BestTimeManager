@@ -28,7 +28,6 @@ window.onload=function(){
         let lineConfig = {
           type: 'line',
           data: {
-            // ※labelとデータの関係は得にありません
             labels: aryDate,
             datasets: [{
               label: 'Red',
@@ -47,10 +46,10 @@ window.onload=function(){
             plugins:{
               tooltip: {
                 callbacks: {
-                  label: function(context){	// 引数は1つ
+                  label: function(context){
                     let label = context.label || '';
                     if (context.formattedValue !== null) {
-                        label = context.formattedValue;	// 単位
+                        label = context.formattedValue;
                     }
                     return label;
                   },
@@ -65,7 +64,7 @@ window.onload=function(){
                 max:MAX,
                 type: 'time',
                 time: {
-                  parser: "mm:ss:SS", //<- use 'parser'
+                  parser: "mm:ss:SS",
                   unit: 'millisecond',
                   stepSize: 1000,
                   tooltipFormat:'mm:ss:SS',
