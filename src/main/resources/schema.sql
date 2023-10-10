@@ -25,13 +25,12 @@ CREATE TABLE IF NOT EXISTS record(
 );
 
 CREATE TABLE IF NOT EXISTS lapTime(
-lapTimeId VARCHAR(8)   PRIMARY KEY,
-recordId VARCHAR(8),
-lapTimeNum VARCHAR(8),
-lapTimeRecord VARCHAR(32),
-lapTimeFlag BOOLEAN,
-lapTimeMemo VARCHAR(128),
-FOREIGN KEY(recordId)
-REFERENCES record(recordId)
-
+    lapTimeId VARCHAR(8)   PRIMARY KEY,
+    recordId VARCHAR(8),
+    lapTimeNum VARCHAR(8),
+    lapTimeRecord VARCHAR(32),
+    lapTimeFlag BOOLEAN,
+    lapTimeMemo VARCHAR(128),
+    FOREIGN KEY(recordId)
+    REFERENCES record(recordId)
 );

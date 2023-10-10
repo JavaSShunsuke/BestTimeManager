@@ -20,18 +20,15 @@
 
 <nav>
     <ul>
-        <li><a href="/playerlist">選手一覧</a></li>
-        <li><a href="/eventlist">競技種目一覧</a></li>
-        <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
-        <li><a href="#">BBBB</a></li>
-        <li><a href="#">CCCC</a></li>
+        <li><a href="/player_list">選手一覧</a></li>
+        <li><a href="/event_list">競技種目一覧</a></li>
     </ul>
 </nav>
 
-<form action="/addplayer">
+<form action="/add_player">
 <div class="player_form">
     <h2>選手の登録</h2>
-    <label class="form-label">選手名</label>
+    <label for="new_playerName" class="form-label">選手名</label>
     <input name="playerName" class="form-control" type="text" id="new_playerName" />
     <input type="submit" value="登録"/>
 </div>
@@ -39,8 +36,8 @@
 
 <div>
     <h2>選手一覧</h2>
-    <form action="/searchplayer_inplayer">
-        <label>選手名検索</label>
+    <form action="/search_player_in_player">
+        <label for="searchPlayerName">選手名検索</label>
         <input type="text" id="searchPlayerName" name="searchPlayerName">
         <button type="submit">検索</button>
     </form>
@@ -57,12 +54,12 @@
         <tr th:each="player : ${player}">
             <td th:text="${player.playerId}"></td>
             <td class="hidden" th:text="${player.playerName}"></td>
-            <td><a th:href="@{/recordlist/{playerId}(playerId=${player.playerId})}"  th:text="${player.playerName}"></a></td>
+            <td><a th:href="@{/record_list/{playerId}(playerId=${player.playerId})}"  th:text="${player.playerName}"></a></td>
             <td>
                 <button type="submit" name="update_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary">更新</button>
             </td>
             <td>
-                <form action="/deleteplayer">
+                <form action="/delete_player">
                     <button type="submit" name="delete_button" class="btn btn-secondary">削除</button>
                     <input type="hidden" name="playerId" th:value="${player.playerId}" />
                 </form>
@@ -75,7 +72,7 @@
 <div id="playerUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/updateplayer">
+            <form action="/update_player">
                 <div class="modal-header">
                     <h2>選手の更新</h2>
                 </div>
@@ -92,26 +89,5 @@
         </div>
     </div>
 </div>
-
-<!--<div style="display:hidden">-->
-<!--    <table>-->
-<!--        <tbody>-->
-<!--        <tr id="player_name_row">-->
-<!--            <td name="playerId"></td>-->
-<!--            <td name="playerName" hidden></td>-->
-<!--            <td><a name="clone_href" th:href="@{/recordlist/playerId}" hidden>playerName</a></td>-->
-<!--            <td>-->
-<!--                <button type="submit" name="clone_button" onclick="copyToDialog(this.parentElement.parentElement);" data-bs-toggle="modal" data-bs-target="#playerUpdateDialog" class="btn btn-primary" hidden>更新</button>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--                <form action="/deleteplayer">-->
-<!--                    <button type="submit" name="clone_button" class="btn btn-secondary" hidden>削除</button>-->
-<!--                    <input type="hidden" name="playerId" value="" id="clonePlayerId"/>-->
-<!--                </form>-->
-<!--            </td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
 </body>
 </html>
