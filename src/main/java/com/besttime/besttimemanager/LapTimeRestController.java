@@ -9,23 +9,11 @@ import java.util.List;
 
 @RestController
 public class LapTimeRestController {
-    private final BesttimeDao dao;
+    private final BestTimeDao dao;
 
     @Autowired
-    public LapTimeRestController(BesttimeDao dao) {
+    public LapTimeRestController(BestTimeDao dao) {
         this.dao = dao;
-    }
-
-    record playerItem(String playerId, String playerName, boolean playerFlag) {
-
-    }
-
-    record eventItem(String eventId, String eventName, boolean eventFlag) {
-
-    }
-
-    record recordItem(String recordId, String playerId, String eventId, String addNowDate,String recordTime, boolean recordFlag,
-                      boolean bestFlag) {
     }
 
     record lapTimeItem(String lapTimeId, String recordId, String lapTimeNum, String lapTimeRecord,
@@ -33,24 +21,19 @@ public class LapTimeRestController {
 
     }
 
-
-    @PostMapping(value = "/listlaptime")
+    //モーダルにラップタイム一覧を表示
+    @PostMapping(value = "/list_lap_time")
     List<LapTimeRestController.lapTimeItem> listLapTimes(
             @RequestParam("recordId") String recordId) {
-//        List<LapTimeController.lapTimeItem> lapTimeItems = this.dao.findLapTimes(recordId);
-//        model.addAttribute("lapTime", lapTimeItems);\
         return this.dao.findLapTimes(recordId);
     }
 
-    @PostMapping(value="/deletelaptime")
-    String deleteLapTimes(
+    //ラップタイムの削除（論理削除）
+    @PostMapping(value="/delete_lap_time")
+    void deleteLapTimes(
             @RequestParam("lapTimeId") String lapTimeId,
             @RequestParam("recordId") String recordId) {
-//        List<LapTimeController.lapTimeItem> lapTimeItems = this.dao.findLapTimes(recordId);
-//        model.addAttribute("lapTime", lapTimeItems);\
         this.dao.deleteLapTime(lapTimeId);
         this.dao.findLapTimes(recordId);
-        return "^_^";
     }
-
 }

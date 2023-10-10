@@ -26,17 +26,26 @@
 
 <nav>
     <ul>
-        <li><a href="/playerlist">選手一覧</a></li>
-        <li><a href="/eventlist">競技種目一覧</a></li>
-        <li><a href="http://abehiroshi.la.coocan.jp/">AAAA</a></li>
-        <li><a href="#">BBBB</a></li>
-        <li><a href="#">CCCC</a></li>
+        <li><a href="/player_list">選手一覧</a></li>
+        <li><a href="/event_list">競技種目一覧</a></li>
     </ul>
 </nav>
 
-<canvas id="lineChart"></canvas>
+<canvas style="height:40vh; width:80vw" id="lineChart"></canvas>
 <div>
     <h2>記録一覧</h2>
+    <form action="/select_archive">
+        <label for="*{playerId}">選手名</label>
+        <select name="playerId" id="*{playerId}">
+            <option th:each="player: ${player}" th:value="${player.playerId}" th:text="${player.playerName}" th:selected="${player.playerId} == *{playerId}">playerName</option>
+        </select>
+
+        <label for="*{eventId}">種目名</label>
+        <select name="eventId" id="*{eventId}">
+         <option th:each="event: ${event}" th:value="${event.eventId}" th:text="${event.eventName}" th:selected="${event.eventId} == *{eventId}">eventName</option>
+        </select>
+        <button type="submit" id="archive_select_button">更新</button>
+    </form>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -46,7 +55,6 @@
             <th class="hidden">競技名</th>
             <th>登録日</th>
             <th>記録</th>
-            <th>表示フラグ</th>
             <th>ベストタイムフラグ</th>
         </tr>
         </thead>
@@ -58,7 +66,6 @@
             <td th:text="${record.eventName}" class="hidden"></td>
             <td th:text="${record.addNowDate}"></td>
             <td th:text="${record.recordTime}"></td>
-            <td id="recordFlag" th:text="${record.recordFlag}"></td>
             <td id="bestFlag" th:text="${record.bestFlag}"></td>
         </tr>
         </tbody>
