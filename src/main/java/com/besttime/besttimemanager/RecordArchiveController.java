@@ -19,7 +19,7 @@ public class RecordArchiveController {
     }
 
     record recordItem(String recordId, String playerId, String eventId,String eventName,
-                      String addNowDate, String recordTime, boolean bestFlag) {
+                      String addNowDate, String recordTime, boolean best_is_showed) {
     }
 
     //フラグ関係なく記録一覧を表示、折れ線グラフも表示される

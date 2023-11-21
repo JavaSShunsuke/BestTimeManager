@@ -16,7 +16,7 @@ public class LapTimeController {
     }
 
     record lapTimeItem(String lapTimeId, String recordId, String lapTimeNum, String lapTimeRecord,
-                       boolean lapTimeFlag,String lapTimeMemo) {
+                       boolean lap_time_is_showed,String lapTimeMemo) {
 
     }
 

@@ -18,7 +18,7 @@ public class EventController {
         this.dao = dao;
     }
 
-    record eventItem(String eventId, String eventName, boolean eventFlag) {
+    record eventItem(String eventId, String eventName, boolean event_is_showed) {
     }
 
     //種目一覧画面

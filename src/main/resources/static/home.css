@@ -9,12 +9,12 @@ nav {
   padding-top: 20px;
   box-sizing: border-box;
   position: fixed;
-    top: 0;
-    left: 0;
+  top: 0;
+  left: 0;
 }
 
 ul {
-  display: flex;
+display:flex;
 }
 
 li {

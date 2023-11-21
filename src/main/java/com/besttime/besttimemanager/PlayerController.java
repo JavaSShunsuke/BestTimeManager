@@ -18,7 +18,7 @@ public class PlayerController {
         this.dao = dao;
     }
 
-    record playerItem(String playerId, String playerName, boolean playerFlag) {
+    record playerItem(String playerId, String playerName, boolean player_is_showed) {
 
     }
 

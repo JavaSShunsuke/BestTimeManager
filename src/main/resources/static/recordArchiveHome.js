@@ -1,3 +1,4 @@
+//読み込み時、表示フラグが立っていたらその列に背景色を変えるクラスを追加
 window.onload=function(){
     var table=document.getElementById('record_archive_body');
 
@@ -7,6 +8,8 @@ window.onload=function(){
         }
     }
 
+
+//線グラフの表示
     let lineCtx = document.getElementById("lineChart");
     var table = document.getElementById('record_archive_body');
     const aryDate=[];

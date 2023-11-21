@@ -36,24 +36,24 @@ public class BestTimeDao {
 
     //DB選手テーブルからデータ取得
     public List<PlayerController.playerItem> findPlayers() {
-        String query = "SELECT * FROM " + "player WHERE playerFlag=true";
+        String query = "SELECT * FROM " + "player WHERE player_is_showed=true";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         return result.stream().map(
                 (Map<String, Object> row) -> new PlayerController.playerItem(
-                        row.get("playerId").toString(),
-                        row.get("playerName").toString(),
-                        (Boolean) row.get("playerFlag")
+                        row.get("player_id").toString(),
+                        row.get("player_name").toString(),
+                        (Boolean) row.get("player_is_showed")
                 )).toList();
     }
 
     //選手削除（論理削除）
     public void deletePlayer(String id) {
-        jdbcTemplate.update("UPDATE player SET playerFlag=? WHERE playerId = ?", false, id);
+        jdbcTemplate.update("UPDATE player SET player_is_showed=? WHERE player_id = ?", false, id);
     }
 
     //選手名更新
     public void updatePlayer(PlayerController.playerItem playerItem) {
-        jdbcTemplate.update("UPDATE player set playerName=? where playerId = ?",
+        jdbcTemplate.update("UPDATE player set player_name=? where player_id = ?",
                 playerItem.playerName(),
                 playerItem.playerId());
     }
@@ -61,14 +61,14 @@ public class BestTimeDao {
 
     //選手一覧画面で選手名検索
     public List<PlayerController.playerItem> searchPlayerInPlayer(String searchPlayerName) {
-        String query = "SELECT * FROM " + "player WHERE playerFlag=true AND playerName like '%" + searchPlayerName + "%'";
+        String query = "SELECT * FROM " + "player WHERE player_is_showed=true AND player_name like '%" + searchPlayerName + "%'";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<PlayerController.playerItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new PlayerController.playerItem(
-                        row.get("playerId").toString(),
-                        row.get("playerName").toString(),
-                        (Boolean) row.get("playerFlag")
+                        row.get("player_id").toString(),
+                        row.get("player_name").toString(),
+                        (Boolean) row.get("player_is_showed")
                 )).toList();
         return list;
     }
@@ -78,14 +78,14 @@ public class BestTimeDao {
     * */
     //DB種目テーブルからデータ取得
     public List<EventController.eventItem> findEvents() {
-        String query = "SELECT * FROM " + "event WHERE eventFlag=true ORDER BY eventName ASC";
+        String query = "SELECT * FROM " + "event WHERE event_is_showed=true ORDER BY event_name ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<EventController.eventItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new EventController.eventItem(
-                        row.get("eventId").toString(),
-                        row.get("eventName").toString(),
-                        (Boolean) row.get("eventFlag")
+                        row.get("event_id").toString(),
+                        row.get("event_name").toString(),
+                        (Boolean) row.get("event_is_showed")
                 )).toList();
         return list;
     }
@@ -100,26 +100,26 @@ public class BestTimeDao {
 
     //種目の削除（論理削除）
     public void deleteEvent(String id) {
-        jdbcTemplate.update("UPDATE event SET eventFlag=? WHERE eventId = ?", false, id);
+        jdbcTemplate.update("UPDATE event SET event_is_showed=? WHERE event_id = ?", false, id);
     }
 
     //種目名の更新
     public void updateEvent(EventController.eventItem eventItem) {
-        jdbcTemplate.update("UPDATE event set eventName=? where eventId = ?",
+        jdbcTemplate.update("UPDATE event set event_name=? where event_id = ?",
                 eventItem.eventName(),
                 eventItem.eventId());
     }
 
     //種目一覧画面で種目名検索
     public List<EventController.eventItem> searchEventInEvent(String searchEventName) {
-        String query = "SELECT * FROM " + "event WHERE eventFlag=true AND eventName like '%" + searchEventName + "%'";
+        String query = "SELECT * FROM " + "event WHERE event_is_showed=true AND event_name like '%" + searchEventName + "%'";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<EventController.eventItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new EventController.eventItem(
-                        row.get("eventId").toString(),
-                        row.get("eventName").toString(),
-                        (Boolean) row.get("eventFlag")
+                        row.get("event_id").toString(),
+                        row.get("event_name").toString(),
+                        (Boolean) row.get("event_is_showed")
                 )).toList();
         return list;
     }
@@ -137,7 +137,7 @@ public class BestTimeDao {
 
     //記録のベストタイムフラグの更新
     public int updateBestFlag(RecordController.recordItem recordItem) {
-        String query = "SELECT recordTime FROM " + "record WHERE playerId='" + recordItem.playerId() + "' AND eventId='" + recordItem.eventId() + "'AND BestFlag=true";
+        String query = "SELECT record_time FROM " + "record WHERE player_id='" + recordItem.playerId() + "' AND event_id='" + recordItem.eventId() + "'AND best_is_showed=true";
         String bestTime;
         try {
             bestTime = this.jdbcTemplate.queryForObject(query, String.class);
@@ -149,7 +149,7 @@ public class BestTimeDao {
         int newI =Integer.parseInt(newTime.replace(":", ""));
         int number;
         if (bestI>=newI) {
-            number = jdbcTemplate.update("UPDATE record SET BestFlag=false WHERE playerId = ? AND eventId = ?",
+            number = jdbcTemplate.update("UPDATE record SET best_is_showed=false WHERE player_id = ? AND event_id = ?",
                     recordItem.playerId(),
                     recordItem.eventId()
             );
@@ -161,30 +161,30 @@ public class BestTimeDao {
 
     //DB記録テーブルからデータ取得（bestFlagがtrueの物のみ）
     public List<RecordController.recordItem> findBestRecords(String playerId) {
-        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE bestFlag=true AND playerId='" + playerId + "'";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.event_id = event.event_id WHERE best_is_showed=true AND player_id='" + playerId + "' ORDER BY event_name ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordController.recordItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new RecordController.recordItem(
-                        row.get("recordId").toString(),
-                        row.get("playerId").toString(),
-                        row.get("eventId").toString(),
-                        row.get("eventName").toString(),
-                        row.get("addNowDate").toString(),
-                        row.get("recordTime").toString(),
-                        (Boolean) row.get("bestFlag")
+                        row.get("record_id").toString(),
+                        row.get("player_id").toString(),
+                        row.get("event_id").toString(),
+                        row.get("event_name").toString(),
+                        row.get("add_now_date").toString(),
+                        row.get("record_time").toString(),
+                        (Boolean) row.get("best_is_showed")
                 )).toList();
         return list;
     }
 
     //記録の削除
     public void deleteRecord(String id) {
-        jdbcTemplate.update("UPDATE record SET bestFlag=? WHERE recordId = ?", false, id);
+        jdbcTemplate.update("UPDATE record SET best_is_showed=? WHERE record_id = ?", false, id);
     }
 
     //記録の更新
     public void updateRecord(RecordController.recordItem recordItem) {
-        jdbcTemplate.update("UPDATE record set addNowDate=?,recordTime=? where recordId = ?",
+        jdbcTemplate.update("UPDATE record set add_now_date=?,record_time=? where record_id = ?",
                 recordItem.addNowDate(),
                 recordItem.recordTime(),
                 recordItem.recordId());
@@ -192,7 +192,7 @@ public class BestTimeDao {
 
     //記録画面に選手名を送信
     public String findPlayerName(String playerId) {
-        String query = "SELECT playerName FROM " + "player WHERE playerId='" + playerId + "'";
+        String query = "SELECT player_name FROM " + "player WHERE player_id='" + playerId + "'";
         String name;
         name = this.jdbcTemplate.queryForObject(query, String.class);
         return name;
@@ -200,24 +200,24 @@ public class BestTimeDao {
 
     //記録一覧画面に種目名を送信
     public String searchEventName(String eventId) {
-        String query = "SELECT eventName FROM event WHERE eventId='"+ eventId +"'" ;
+        String query = "SELECT event_name FROM event WHERE event_id='"+ eventId +"'" ;
         return this.jdbcTemplate.queryForObject(query, String.class);
     }
 
     //記録一覧画面で種目名検索
     public List<RecordController.recordItem> searchEventInRecord(String playerId ,String searchEventName) {
-        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE bestFlag=true AND eventName like '%" + searchEventName + "%' AND playerId='"+playerId+"'";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.event_id = event.event_id WHERE best_is_showed=true AND event_name like '%" + searchEventName + "%' AND player_id='"+playerId+"'";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordController.recordItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new RecordController.recordItem(
-                        row.get("recordId").toString(),
-                        row.get("playerId").toString(),
-                        row.get("eventId").toString(),
-                        row.get("eventName").toString(),
-                        row.get("addNowDate").toString(),
-                        row.get("recordTime").toString(),
-                        (Boolean) row.get("bestFlag")
+                        row.get("record_id").toString(),
+                        row.get("player_id").toString(),
+                        row.get("event_id").toString(),
+                        row.get("event_name").toString(),
+                        row.get("add_now_date").toString(),
+                        row.get("record_time").toString(),
+                        (Boolean) row.get("best_is_showed")
                 )).toList();
         return list;
     }
@@ -229,37 +229,37 @@ public class BestTimeDao {
     public void addLapTime(LapTimeController.lapTimeItem item) {
         SqlParameterSource param = new BeanPropertySqlParameterSource(item);
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate)
-                .withTableName("lapTime");
+                .withTableName("lap_time");
         insert.execute(param);
     }
 
     //記録のラップタイム表示フラグの更新
     public void updateLapTimeFlag(LapTimeController.lapTimeItem lapTimeItem) {
-        jdbcTemplate.update("UPDATE lapTime SET lapTimeFlag=false WHERE recordId = ? AND lapTimeNum = ?",
+        jdbcTemplate.update("UPDATE lap_time SET lap_time_is_showed=false WHERE record_id = ? AND lap_time_num = ?",
                 lapTimeItem.recordId(),
                 lapTimeItem.lapTimeNum());
     }
 
     //画面にラップタイムを送信
     public List<LapTimeRestController.lapTimeItem> findLapTimes(String recordId) {
-        String query = "SELECT * FROM lapTime WHERE lapTimeFlag=true AND recordId='" + recordId + "' ORDER BY lapTimeNum ASC";
+        String query = "SELECT * FROM lap_time WHERE lap_time_is_showed=true AND record_id='" + recordId + "' ORDER BY lap_time_num ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<LapTimeRestController.lapTimeItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new LapTimeRestController.lapTimeItem(
-                        row.get("lapTimeId").toString(),
-                        row.get("recordId").toString(),
-                        row.get("lapTimeNum").toString(),
-                        row.get("lapTimeRecord").toString(),
-                        (Boolean) row.get("lapTimeFlag"),
-                        row.get("lapTimeMemo").toString()
+                        row.get("lap_time_id").toString(),
+                        row.get("record_id").toString(),
+                        row.get("lap_time_num").toString(),
+                        row.get("lap_time_record").toString(),
+                        (Boolean) row.get("lap_time_is_showed"),
+                        row.get("lap_time_memo").toString()
                 )).toList();
         return list;
     }
 
     //ラップタイムの削除（論理削除）
     public void deleteLapTime(String lapTimeId) {
-        jdbcTemplate.update("UPDATE lapTime SET lapTimeFlag=? WHERE lapTimeId = ?", false, lapTimeId);
+        jdbcTemplate.update("UPDATE lap_time SET lap_time_is_showed=? WHERE lap_time_id = ?", false, lapTimeId);
     }
 
     /*
@@ -267,25 +267,25 @@ public class BestTimeDao {
     * */
     //DB記録テーブルからデータ取得（全件）
     public List<RecordArchiveController.recordItem> findArchiveRecords(String playerId,String eventId) {
-        String query = "SELECT * FROM " + "record INNER JOIN event ON record.eventId = event.eventId WHERE playerId='" + playerId + "' AND record.eventId='" + eventId + "' ORDER BY addNowDate ASC";
+        String query = "SELECT * FROM " + "record INNER JOIN event ON record.event_id = event.event_id WHERE player_id='" + playerId + "' AND record.event_id='" + eventId + "' ORDER BY add_now_date ASC";
         List<Map<String, Object>> result = this.jdbcTemplate.queryForList(query);
         List<RecordArchiveController.recordItem> list;
         list = result.stream().map(
                 (Map<String, Object> row) -> new RecordArchiveController.recordItem(
-                        row.get("recordId").toString(),
-                        row.get("playerId").toString(),
-                        row.get("eventId").toString(),
-                        row.get("eventName").toString(),
-                        row.get("addNowDate").toString(),
-                        row.get("recordTime").toString(),
-                        (Boolean) row.get("bestFlag")
+                        row.get("record_id").toString(),
+                        row.get("player_id").toString(),
+                        row.get("event_id").toString(),
+                        row.get("event_name").toString(),
+                        row.get("add_now_date").toString(),
+                        row.get("record_time").toString(),
+                        (Boolean) row.get("best_is_showed")
                 )).toList();
         return list;
     }
 
     //アーカイブ画面に種目名を送信
     public String findEventName(String eventId) {
-        String query = "SELECT eventName FROM " + "event WHERE eventId='"+eventId+"'";
+        String query = "SELECT event_name FROM " + "event WHERE event_id='"+eventId+"'";
         String name;
         name = this.jdbcTemplate.queryForObject(query,String.class);
         return name;

@@ -24,6 +24,7 @@
 <body>
 <h1 th:text="${playerHistory}"></h1>
 
+<!--ナビバー-->
 <nav>
     <ul>
         <li><a href="/player_list">選手一覧</a></li>
@@ -31,6 +32,7 @@
     </ul>
 </nav>
 
+<!--記録登録-->
 <form action="/add_record" name="record_form">
     <div class="record_form">
         <h2>記録の登録</h2>
@@ -53,6 +55,8 @@
     </div>
 </form>
 <div>
+
+<!--記録一覧-->
     <h2>記録一覧</h2>
     <form th:action="@{/record_list/{playerId}/search_event_in_record(playerId=${inputPlayerId})}" id="searchInRecord">
         <label for="searchEventName">競技名検索</label>
@@ -106,6 +110,7 @@
     </table>
 </div>
 
+<!--記録更新ダイアログ-->
 <div id="recordUpdateDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -138,6 +143,8 @@
     </div>
 </div>
 
+
+<!--ラップタイム登録ダイアログ-->
 <div id="addLapTimeDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -173,6 +180,7 @@
     </div>
 </div>
 
+<!--ラップタイム表示ダイアログ-->
 <div id="listLapTimeDialog" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -210,7 +218,10 @@
             </form>
         </div>
     </div>
-</div><div style="display:hidden">
+</div>
+
+<!--ラップタイム用ダミー-->
+<div style="display:hidden">
     <table>
         <tbody>
         <tr id="table_lapTime_row">
@@ -227,6 +238,7 @@
     </table>
 </div>
 
+<!--記録用ダミー-->
 <div style="display:hidden">
     <table>
         <tbody>
