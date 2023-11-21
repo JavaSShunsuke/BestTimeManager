@@ -23,7 +23,7 @@
 
 <body>
 <h1 th:text="|${playerHistory} の ${eventHistory} アーカイブ|"></h1>
-
+<!--ナビバー-->
 <nav>
     <ul>
         <li><a href="/player_list">選手一覧</a></li>
@@ -34,6 +34,7 @@
 <canvas style="height:40vh; width:80vw" id="lineChart"></canvas>
 <div>
     <h2>記録一覧</h2>
+<!--    アーカイブ切り替え用ドロップダウンボックス-->
     <form action="/select_archive">
         <label for="*{playerId}">選手名</label>
         <select name="playerId" id="*{playerId}">
@@ -46,6 +47,8 @@
         </select>
         <button type="submit" id="archive_select_button">更新</button>
     </form>
+
+    <!--アーカイブデータ一覧-->
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -66,7 +69,8 @@
             <td th:text="${record.eventName}" class="hidden"></td>
             <td th:text="${record.addNowDate}"></td>
             <td th:text="${record.recordTime}"></td>
-            <td id="bestFlag" th:text="${record.bestFlag}"></td>
+            <td id="bestFlag" th:text="${record.best_is_showed
+            }"></td>
         </tr>
         </tbody>
     </table>

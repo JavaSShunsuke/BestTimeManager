@@ -1,3 +1,4 @@
+//分、秒、ミリ秒の入力を一つにまとめ整形してinputタグのvalueに設定
 function outputRecordTime(){
     var formObj = document.record_form;
     var minute = formObj.minute.value;
@@ -14,6 +15,7 @@ function outputRecordTime(){
     formObj.millisecond.disabled=true;
 }
 
+//ダイアログに必要データを渡す
 function copyToUpdateRecordDialog(row){
     document.getElementById('update_recordId').value = row.cells[0].firstChild.data;
     document.getElementById('update_playerId').value = row.cells[1].firstChild.data;
@@ -25,6 +27,7 @@ function copyToUpdateRecordDialog(row){
     document.getElementById('title_eventId').innerText = row.cells[3].firstChild.data +"の記録の更新";
 }
 
+//分、秒、ミリ秒の入力を一つにまとめ整形してinputタグのvalueに設定
 function updateRecordTime(){
     var formObj = document.updateRecord_form;
     var minute = formObj.minute.value;
@@ -47,6 +50,7 @@ function copyToAddLapTimeDialog(row){
     document.getElementById('addLapTimeLabel').innerText = row.cells[3].firstChild.data + "の記録";
 }
 
+//分、秒、ミリ秒の入力を一つにまとめ整形してinputタグのvalueに設定
 function addLapTime(){
     var formObj = document.addLapTime_form;
     var minute = formObj.minute.value;
@@ -62,6 +66,7 @@ function addLapTime(){
     formObj.millisecond.disabled=true;
 }
 
+//ラップタイムダイアログの制御
 function ListLapTimeDialog(row){
     document.getElementById("title_listLapTime").innerText = row.cells[3].firstChild.data + "のラップタイム"
     var recordId = row.cells[0].firstChild.data
@@ -91,6 +96,7 @@ function ListLapTimeDialog(row){
     });
 }
 
+//ラップタイムダイアログ内でのラップタイム削除機能
 function deleteLapTime(row){
     var lapTimeId = row.cells[0].firstChild.data
     var recordId = row.cells[1].firstChild.data
@@ -102,6 +108,7 @@ function deleteLapTime(row){
     })
 }
 
+//読み込み時必要データを整形
 window.onload = function(){
     var now = new Date();
     var nowYear = now.getFullYear();

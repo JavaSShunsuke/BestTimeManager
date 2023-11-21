@@ -1,36 +1,35 @@
 CREATE TABLE IF NOT EXISTS player(
-    playerId VARCHAR(8)   PRIMARY KEY,
-    playerName VARCHAR(256),
-    playerFlag BOOLEAN
+    player_id VARCHAR(8)   PRIMARY KEY,
+    player_name VARCHAR(256),
+    player_is_showed BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS event(
-    eventId VARCHAR(8)   PRIMARY KEY,
-    eventName VARCHAR(256),
-    eventFlag BOOLEAN
+    event_id VARCHAR(8)   PRIMARY KEY,
+    event_name VARCHAR(256),
+    event_is_showed BOOLEAN
 );
 
 CREATE TABLE IF NOT EXISTS record(
-    recordId VARCHAR(8)   PRIMARY KEY,
-    playerId VARCHAR(8),
-    eventId VARCHAR(8),
-    recordTime VARCHAR(32),
-    recordFlag VARCHAR(32),
-    bestFlag BOOLEAN,
-    addNowDate VARCHAR(32),
-    FOREIGN KEY(playerId)
-    REFERENCES player(playerId),
-    FOREIGN KEY(eventId)
-    REFERENCES event(eventId)
+    record_id VARCHAR(8)   PRIMARY KEY,
+    player_id VARCHAR(8),
+    event_id VARCHAR(8),
+    record_time VARCHAR(32),
+    best_is_showed BOOLEAN,
+    add_now_date VARCHAR(32),
+    FOREIGN KEY(player_id)
+    REFERENCES player(player_id),
+    FOREIGN KEY(event_id)
+    REFERENCES event(event_id)
 );
 
-CREATE TABLE IF NOT EXISTS lapTime(
-    lapTimeId VARCHAR(8)   PRIMARY KEY,
-    recordId VARCHAR(8),
-    lapTimeNum VARCHAR(8),
-    lapTimeRecord VARCHAR(32),
-    lapTimeFlag BOOLEAN,
-    lapTimeMemo VARCHAR(128),
-    FOREIGN KEY(recordId)
-    REFERENCES record(recordId)
+CREATE TABLE IF NOT EXISTS lap_time(
+    lap_time_id VARCHAR(8)   PRIMARY KEY,
+    record_id VARCHAR(8),
+    lap_time_num VARCHAR(8),
+    lap_time_record VARCHAR(32),
+    lap_time_is_showed BOOLEAN,
+    lap_time_memo VARCHAR(128),
+    FOREIGN KEY(record_id)
+    REFERENCES record(record_id)
 );

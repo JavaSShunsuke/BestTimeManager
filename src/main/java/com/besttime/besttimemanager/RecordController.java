@@ -20,7 +20,7 @@ public class RecordController {
     }
 
     record recordItem(String recordId, String playerId, String eventId, String eventName,
-                      String addNowDate, String recordTime, boolean bestFlag) {
+                      String addNowDate, String recordTime, boolean best_is_showed) {
     }
 
     //記録一覧画面を表示
